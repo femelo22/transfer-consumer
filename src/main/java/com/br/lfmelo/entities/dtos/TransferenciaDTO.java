@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.math.BigDecimal;
 
-public class TranferenciaDTO {
+public class TransferenciaDTO {
 
     @NotEmpty(message = "Value cannot be null")
     private BigDecimal value;

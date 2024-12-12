@@ -1,7 +1,7 @@
 package com.br.lfmelo.services;
 
-import com.br.lfmelo.entities.dtos.TranferenciaDTO;
+import com.br.lfmelo.entities.dtos.TransferenciaDTO;
 
 public interface TransferenciaService {
-    void validarDadosEnviarMensagem(TranferenciaDTO dto);
+    public void efetuarTransferencia(TransferenciaDTO dto);
 }
