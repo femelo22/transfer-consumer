@@ -1,15 +1,20 @@
 package com.br.lfmelo.services.impl;
 
-import com.br.lfmelo.entities.Usuario;
-import com.br.lfmelo.entities.dtos.TransferenciaDTO;
-import com.br.lfmelo.services.TransferenciaService;
-import com.br.lfmelo.services.UsuarioService;
-import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigDecimal;
+import java.util.List;
+
+import com.br.lfmelo.MailSenderClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.br.lfmelo.entities.Usuario;
+import com.br.lfmelo.entities.dtos.EmailDTO;
+import com.br.lfmelo.entities.dtos.TransferenciaDTO;
+import com.br.lfmelo.enums.TipoUsuario;
+import com.br.lfmelo.services.TransferenciaService;
+import com.br.lfmelo.services.UsuarioService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -17,6 +22,9 @@ public class TransferenciaServiceImpl implements TransferenciaService {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private MailSenderClient mailSenderClient;
 
     @Override
     public void efetuarTransferencia(TransferenciaDTO dto) {
@@ -26,6 +34,17 @@ public class TransferenciaServiceImpl implements TransferenciaService {
         List<Usuario> usuariosEnvolvidos = usuarioService.atualizarSaldo(pagador, beneficiario, dto.getValue());
 
         System.out.println("Transferencia de R$ " + dto.getValue() + " realizada com sucesso!");
+
+        for(Usuario usuario: usuariosEnvolvidos) {
+           enviaEmailConfirmacao(usuario, dto.getValue());
+        }
+    }
+
+    public void enviaEmailConfirmacao(Usuario usuario, BigDecimal valor) {
+        if(usuario.getTipoUsuario().equals(TipoUsuario.LOJISTA)) {
+            var email = new EmailDTO("noreply@gmail.com", "Transferência recebida!", "Voce recebeu uma transferência de R$ " + valor);
+            mailSenderClient.sendMailNotification(email);
+        }
     }
 
 
