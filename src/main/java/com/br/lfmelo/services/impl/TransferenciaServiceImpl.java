@@ -3,6 +3,7 @@ package com.br.lfmelo.services.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.br.lfmelo.MailSenderClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,6 @@ import com.br.lfmelo.entities.Usuario;
 import com.br.lfmelo.entities.dtos.EmailDTO;
 import com.br.lfmelo.entities.dtos.TransferenciaDTO;
 import com.br.lfmelo.enums.TipoUsuario;
-import com.br.lfmelo.services.SendNotificationService;
 import com.br.lfmelo.services.TransferenciaService;
 import com.br.lfmelo.services.UsuarioService;
 
@@ -24,7 +24,7 @@ public class TransferenciaServiceImpl implements TransferenciaService {
     private UsuarioService usuarioService;
 
     @Autowired
-    private SendNotificationService notificationService;
+    private MailSenderClient mailSenderClient;
 
     @Override
     public void efetuarTransferencia(TransferenciaDTO dto) {
@@ -43,9 +43,8 @@ public class TransferenciaServiceImpl implements TransferenciaService {
     public void enviaEmailConfirmacao(Usuario usuario, BigDecimal valor) {
         if(usuario.getTipoUsuario().equals(TipoUsuario.LOJISTA)) {
             var email = new EmailDTO("noreply@gmail.com", "Transferência recebida!", "Voce recebeu uma transferência de R$ " + valor);
-            notificationService.sendMailNotification(email);
+            mailSenderClient.sendMailNotification(email);
         }
-        //TODO: Implementar regras para envio de email para quem enviou a transferência
     }
 
 
