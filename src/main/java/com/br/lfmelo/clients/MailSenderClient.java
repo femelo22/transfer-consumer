@@ -1,4 +1,4 @@
-package com.br.lfmelo;
+package com.br.lfmelo.clients;
 
 import com.br.lfmelo.entities.dtos.EmailDTO;
 import org.springframework.cloud.openfeign.FeignClient;
